@@ -1,0 +1,10 @@
+{
+  "name": "kidslo",
+  "version": "1.0.0",
+  "description": "Echo Kids Check-In Kiosk & Pickup Web App",
+  "private": true,
+  "scripts": {
+    "build": "node build-config.js",
+    "start": "node server.js"
+  }
+}

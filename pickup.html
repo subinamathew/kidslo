@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FEFADC">
+  <title>Echo Kids Abholpass | Echo Kirche</title>
+
+  <!-- Typography: Clash Display & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-primary: #08415C;
+      --color-secondary: #846B8A;
+      --color-background: #FEFADC;
+      --color-surface: #FFFFFF;
+      --color-border: #D3CAD7;
+      --color-success: #2E7D32;
+      --color-success-bg: #E8F5E9;
+      --color-error: #D64045;
+      --color-text-muted: #5A5D6B;
+
+      --font-heading: 'Clash Display', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+
+      --shadow-md: 0 6px 18px rgba(8, 65, 92, 0.08);
+      --shadow-lg: 0 12px 30px rgba(8, 65, 92, 0.12);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--color-background);
+      color: var(--color-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: env(safe-area-inset-top, 20px) 16px env(safe-area-inset-bottom, 24px) 16px;
+    }
+
+    .pass-container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .header-logo-wrapper {
+      padding: 12px 0 20px 0;
+      text-align: center;
+    }
+
+    .brand-logo {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .pass-card {
+      width: 100%;
+      background-color: var(--color-surface);
+      border: 2px solid var(--color-secondary);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px 24px 24px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    }
+
+    .badge-event {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--color-background);
+      border: 1px solid var(--color-secondary);
+      color: var(--color-primary);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      margin-bottom: 12px;
+    }
+
+    .pass-title {
+      font-family: var(--font-heading);
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .code-box {
+      width: 100%;
+      background-color: var(--color-primary);
+      color: var(--color-background);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      text-align: center;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .code-box-label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.85;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .code-box-value {
+      font-family: var(--font-heading);
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.1;
+      color: #FEFADC;
+    }
+
+    .details-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      padding: 10px 14px;
+      background-color: rgba(254, 250, 220, 0.4);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+    }
+
+    .detail-label {
+      font-size: 12px;
+      color: var(--color-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+    }
+
+    .detail-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-primary);
+      word-break: break-word;
+    }
+
+    .instructions-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background-color: #F8F7FA;
+      border-left: 3.5px solid var(--color-secondary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 12px 14px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      color: var(--color-primary);
+      margin-bottom: 12px;
+    }
+
+    .instructions-notice svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: var(--color-secondary);
+      margin-top: 1px;
+    }
+
+    .screenshot-hint {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* Fallback / Error State */
+    .fallback-card {
+      width: 100%;
+      background-color: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .fallback-title {
+      font-family: var(--font-heading);
+      font-size: 22px;
+      color: var(--color-primary);
+      margin-bottom: 10px;
+    }
+
+    .fallback-text {
+      font-size: 14.5px;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .footer-note {
+      margin-top: auto;
+      padding-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--color-secondary);
+      font-weight: 500;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="pass-container">
+    <div class="header-logo-wrapper">
+      <img src="./logo.png" alt="Echo Kids Logo" class="brand-logo" width="160" height="58">
+    </div>
+
+    <!-- Active Valid Abholpass -->
+    <main class="pass-card" id="passCard">
+      <div class="badge-event">
+        <span>Echo Kids Campus &bull; 22. Nov</span>
+      </div>
+
+      <h1 class="pass-title">Abholpass</h1>
+
+      <div class="code-box">
+        <span class="code-box-label">Abholcode</span>
+        <div class="code-box-value" id="passCode">---</div>
+      </div>
+
+      <div class="details-list">
+        <div class="detail-item">
+          <span class="detail-label">Kind</span>
+          <span class="detail-value" id="passKid">---</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Abholberechtigte Person</span>
+          <span class="detail-value" id="passParent">---</span>
+        </div>
+      </div>
+
+      <div class="instructions-notice">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <p>Bitte zeigen Sie diesen Abholpass bei der Abholung am 22. November vor.</p>
+      </div>
+
+      <p class="screenshot-hint">Tipp: Machen Sie jetzt einen Screenshot für schnellen Zugriff.</p>
+    </main>
+
+    <!-- Fallback Card for Invalid/Missing URL Parameters -->
+    <main class="fallback-card hidden" id="fallbackCard">
+      <h1 class="fallback-title">Kein Abholpass gefunden</h1>
+      <p class="fallback-text">
+        Für diese Seite wurden keine gültigen Anmeldedaten übermittelt. Bitte scannen Sie den QR-Code auf dem Check-In-iPad erneut.
+      </p>
+    </main>
+
+    <footer class="footer-note">
+      <span>Echo Kirche &bull; Echo Kids</span>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const escapeHtml = (str) => {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const kid = params.get('kid');
+      const parent = params.get('parent');
+      const code = params.get('code');
+
+      const passCard = document.getElementById('passCard');
+      const fallbackCard = document.getElementById('fallbackCard');
+
+      if (code && (kid || parent)) {
+        document.getElementById('passCode').textContent = code;
+        document.getElementById('passKid').innerHTML = escapeHtml(kid || '–');
+        document.getElementById('passParent').innerHTML = escapeHtml(parent || '–');
+      } else {
+        passCard.classList.add('hidden');
+        fallbackCard.classList.remove('hidden');
+      }
+    })();
+  </script>
+</body>
+</html>

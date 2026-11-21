@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Echo Kids Check-In">
+  <meta name="description" content="Schneller, sicherer Check-In für Kinder beim Echo Kids Campus.">
+  <meta name="theme-color" content="#FEFADC">
+
+  <title>Echo Kids Check-In | Echo Kirche</title>
+
+  <!-- PWA Manifest for Landscape Lock on Home Screen -->
+  <link rel="manifest" href="./manifest.json">
+
+  <!-- Typography: Clash Display & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <!-- Full-Screen Landscape-Only Enforcement Overlay (Portrait Mode on iPad) -->
+  <div class="portrait-overlay" id="portraitOverlay" aria-live="assertive">
+    <div class="portrait-card">
+      <div class="rotate-icon-wrapper" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+          <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          <path d="M12 2a10 10 0 0 1 10 10"></path>
+          <polyline points="22 7 22 12 17 12"></polyline>
+        </svg>
+      </div>
+      <h2 class="portrait-title">Bitte drehen Sie das iPad ins Querformat</h2>
+      <p class="portrait-desc">Die Kiosk-Anmeldung ist speziell für das Querformat (Landscape) optimiert.</p>
+    </div>
+  </div>
+
+  <div class="kiosk-container">
+    <!-- Top Header with Prominent Logo -->
+    <header class="kiosk-header">
+      <img src="./logo.png" alt="Echo Kids Logo" class="brand-logo" width="180" height="65">
+      <h1 class="visually-hidden">Echo Kids Check-In</h1>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="kiosk-main">
+      <!-- 1. Check-In Form (Dynamic Google Form Action from config.js) -->
+      <form 
+        id="checkinForm" 
+        method="POST" 
+        target="hidden_iframe"
+        autocomplete="off" 
+        novalidate
+      >
+        <!-- Hidden input for generated pickup code -->
+        <input type="hidden" id="pickupCodeEntry" value="">
+
+        <div class="form-grid">
+          <!-- Left Column: Primary Contact Fields -->
+          <div class="form-col form-col-inputs">
+            <!-- Child Name -->
+            <div class="form-group">
+              <label for="childName" class="form-label">
+                Name des Kindes <span class="required-badge" aria-hidden="true">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="childName" 
+                class="form-input" 
+                placeholder="Vor- und Nachname des Kindes" 
+                required 
+                autocomplete="off"
+                autocorrect="off"
+                spellcheck="false"
+                autocapitalize="words"
+              >
+              <p class="error-message" id="childNameError" aria-live="polite"></p>
+            </div>
+
+            <!-- Parents Name -->
+            <div class="form-group">
+              <label for="parentName" class="form-label">
+                Name der Eltern / Erziehungsberechtigten <span class="required-badge" aria-hidden="true">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="parentName" 
+                class="form-input" 
+                placeholder="Vor- und Nachname eines Elternteils" 
+                required 
+                autocomplete="off"
+                autocorrect="off"
+                spellcheck="false"
+                autocapitalize="words"
+              >
+              <p class="error-message" id="parentNameError" aria-live="polite"></p>
+            </div>
+
+            <!-- Parents Phone Number -->
+            <div class="form-group">
+              <label for="parentPhone" class="form-label">
+                Telefonnummer der Eltern <span class="required-badge" aria-hidden="true">*</span>
+              </label>
+              <input 
+                type="tel" 
+                id="parentPhone" 
+                class="form-input" 
+                placeholder="z. B. 0170 12345678" 
+                inputmode="tel" 
+                required 
+                autocomplete="off"
+                autocorrect="off"
+                spellcheck="false"
+              >
+              <p class="error-message" id="parentPhoneError" aria-live="polite"></p>
+            </div>
+          </div>
+
+          <!-- Right Column: Rules, Consent & CTA -->
+          <div class="form-col form-col-actions">
+            <!-- Pickup Rule Toggle Switch (Default ON / true) -->
+            <div class="control-card toggle-card">
+              <div class="toggle-wrapper">
+                <input 
+                  type="checkbox" 
+                  id="pickupToggle" 
+                  class="toggle-checkbox" 
+                  checked
+                >
+                <!-- Hidden input submitted to Google Form with 'True' or 'False' -->
+                <input 
+                  type="hidden" 
+                  id="pickupEntry" 
+                  value="True"
+                >
+                <label for="pickupToggle" class="toggle-track" aria-label="Abhol-Regelung Umschalter">
+                  <span class="toggle-thumb"></span>
+                </label>
+              </div>
+              <label for="pickupToggle" class="toggle-text">
+                Mein Kind darf den Echo Kids Campus nicht alleine verlassen und wird von mir/uns abgeholt.
+              </label>
+            </div>
+
+            <!-- Consent Checkbox (Default OFF, required to submit) -->
+            <div class="control-card consent-card" id="consentCard">
+              <div class="checkbox-wrapper">
+                <input 
+                  type="checkbox" 
+                  id="consentCheck" 
+                  value="True" 
+                  class="custom-checkbox" 
+                  required
+                >
+                <label for="consentCheck" class="checkbox-box" aria-label="Einwilligung bestätigen"></label>
+              </div>
+              <label for="consentCheck" class="consent-text">
+                Ich bin damit einverstanden, dass diese Daten ausschließlich zur Kontaktaufnahme im Rahmen der Veranstaltung am 22. November (z. B. falls mein Kind abgeholt werden möchte) erhoben werden. Die Speicherung erfolgt gemäß den geltenden deutschen Datenschutz- und Jugendschutzbestimmungen (DSGVO) und die Daten werden nach der Veranstaltung bzw. auf Anfrage gelöscht. <span class="required-badge" aria-hidden="true">*</span>
+              </label>
+            </div>
+            <p class="error-message consent-error" id="consentError" aria-live="polite"></p>
+
+            <!-- Submit CTA Button -->
+            <button type="submit" id="submitBtn" class="btn-submit">
+              <span class="btn-text">Kind anmelden</span>
+              <span class="btn-spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- 2. Post-Submission QR & Code Confirmation Screen (Privacy Safe: ONLY code displayed) -->
+      <section id="confirmationView" class="confirmation-view hidden" aria-labelledby="confirmationHeader">
+        <div class="confirmation-grid">
+          <!-- Left: Code & Instructions -->
+          <div class="confirmation-info-col">
+            <div class="success-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>Erfolgreich angemeldet!</span>
+            </div>
+
+            <div class="code-card">
+              <span class="code-label">Ihr persönlicher Abholcode</span>
+              <div class="code-display" id="displayPickupCode">---</div>
+            </div>
+
+            <p class="scan-instruction">
+              Bitte scannen oder fotografieren Sie diesen QR-Code mit Ihrem Smartphone für die spätere Abholung.
+            </p>
+
+            <button type="button" id="nextChildBtn" class="btn-submit btn-next-child">
+              Nächstes Kind anmelden
+            </button>
+          </div>
+
+          <!-- Right: High-contrast crisp QR Code -->
+          <div class="confirmation-qr-col">
+            <div class="qr-card">
+              <div id="qrcode" class="qr-container"></div>
+              <span class="qr-caption">Kamera auf den QR-Code richten</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Subtle Footer Info -->
+    <footer class="kiosk-footer">
+      <span>Echo Kids Campus &bull; 22. November</span>
+    </footer>
+  </div>
+
+  <!-- Hidden iframe fallback for form submission -->
+  <iframe name="hidden_iframe" id="hidden_iframe" title="Verstecktes Übertragungsfenster" tabindex="-1"></iframe>
+
+  <!-- App Configuration generated from Netlify Environment Variables -->
+  <script src="./config.js"></script>
+  <!-- Client-Side Lightweight QR Code Generator (bundled locally) -->
+  <script src="./qrcode.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

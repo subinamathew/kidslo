@@ -1,0 +1,631 @@
+/* ==========================================================================
+   Echo Kids Check-In Kiosk – iPad Landscape Stylesheet
+   Design System: Echo Kirche Brand Guidelines (style.md)
+   ========================================================================== */
+
+/* 1. Design Tokens */
+:root {
+  --color-primary: #08415C;      /* Dark Teal Blue: headings, text, primary accents */
+  --color-secondary: #846B8A;    /* Muted Lavender: secondary text, borders, accents */
+  --color-background: #FEFADC;   /* Light Pastel Yellow: soft warm background */
+  --color-surface: #FFFFFF;      /* Pure white for input fields and cards */
+  --color-surface-tint: rgba(254, 250, 220, 0.6);
+  --color-border: #C5BAC9;       /* Soft lavender border */
+  --color-border-focus: #08415C;
+  --color-error: #D64045;
+  --color-error-bg: #FDEDEE;
+  --color-success: #2E7D32;
+  --color-success-bg: #E8F5E9;
+  --color-text-muted: #5A5D6B;
+
+  --font-heading: 'Clash Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 4px rgba(8, 65, 92, 0.06);
+  --shadow-md: 0 4px 12px rgba(8, 65, 92, 0.08);
+  --shadow-lg: 0 10px 25px rgba(8, 65, 92, 0.12);
+
+  --tap-target-min: 48px;
+}
+
+/* 2. Global Resets & Kiosk Lockdown */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: var(--color-background);
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Allow text selection only in input fields */
+input, textarea {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Visually Hidden Helper for A11y */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Hidden iframe */
+#hidden_iframe {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* 3. Landscape-Only Enforcement Overlay (Portrait on iPad) */
+.portrait-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-background);
+  z-index: 99999;
+  padding: 32px 24px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.portrait-card {
+  max-width: 420px;
+  background-color: #FFFFFF;
+  border: 2px solid var(--color-secondary);
+  border-radius: var(--radius-lg);
+  padding: 36px 28px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rotate-icon-wrapper {
+  margin-bottom: 20px;
+}
+
+.rotate-icon-wrapper svg {
+  width: 64px;
+  height: 64px;
+  color: var(--color-primary);
+  animation: rotateDevice 2.5s ease-in-out infinite;
+}
+
+@keyframes rotateDevice {
+  0%, 15% { transform: rotate(0deg); }
+  45%, 70% { transform: rotate(-90deg); }
+  90%, 100% { transform: rotate(0deg); }
+}
+
+.portrait-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 10px;
+}
+
+.portrait-desc {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
+@media (orientation: portrait) {
+  .portrait-overlay {
+    display: flex;
+  }
+  .kiosk-container {
+    display: none !important;
+  }
+}
+
+/* 4. Kiosk Layout Container */
+.kiosk-container {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top, 14px) env(safe-area-inset-right, 24px) env(safe-area-inset-bottom, 14px) env(safe-area-inset-left, 24px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* 5. Brand Header */
+.kiosk-header {
+  width: 100%;
+  text-align: center;
+  padding: 8px 0 10px 0;
+}
+
+.brand-logo {
+  display: inline-block;
+  max-height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* 6. Main Kiosk Area */
+.kiosk-main {
+  width: 100%;
+  max-width: 1060px;
+}
+
+/* Form Grid: 2 Columns side-by-side in landscape */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.form-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 7. Form Groups & Inputs */
+.form-group {
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--color-primary);
+  margin-bottom: 5px;
+  letter-spacing: -0.01em;
+}
+
+.required-badge {
+  color: var(--color-error);
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.form-input {
+  width: 100%;
+  min-height: var(--tap-target-min);
+  height: 48px;
+  padding: 0 16px;
+  font-family: var(--font-body);
+  font-size: 16px; /* Mandatory >= 16px to prevent iOS Safari auto-zoom */
+  color: var(--color-primary);
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.form-input::placeholder {
+  color: #9C9EA8;
+  font-size: 15px;
+}
+
+.form-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(8, 65, 92, 0.18);
+  background-color: #FFFFFF;
+}
+
+.form-input.is-invalid {
+  border-color: var(--color-error);
+  background-color: var(--color-error-bg);
+}
+
+.error-message {
+  font-size: 12px;
+  color: var(--color-error);
+  font-weight: 500;
+  min-height: 16px;
+  margin-top: 2px;
+  margin-left: 4px;
+}
+
+/* 8. Controls & Actions (Right Column) */
+.control-card {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.control-card:focus-within {
+  border-color: var(--color-secondary);
+}
+
+/* 9. Tactile iOS-Style Toggle Switch (Pickup Rule) */
+.toggle-card {
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggle-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 32px;
+}
+
+.toggle-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-track {
+  display: block;
+  width: 52px;
+  height: 32px;
+  background-color: #D3CAD7;
+  border-radius: var(--radius-full);
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  background-color: #FFFFFF;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-checkbox:checked + .toggle-track,
+.toggle-checkbox:checked ~ .toggle-track {
+  background-color: var(--color-primary);
+}
+
+.toggle-checkbox:checked + .toggle-track .toggle-thumb,
+.toggle-checkbox:checked ~ .toggle-track .toggle-thumb {
+  transform: translateX(20px);
+}
+
+.toggle-checkbox:focus-visible ~ .toggle-track {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+.toggle-text {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--color-primary);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* 10. Consent Checkbox Card */
+.consent-card {
+  align-items: flex-start;
+  padding: 9px 14px;
+  cursor: pointer;
+}
+
+.consent-card.is-invalid {
+  border-color: var(--color-error);
+  background-color: var(--color-error-bg);
+}
+
+.checkbox-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin-top: 1px;
+}
+
+.custom-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-box {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-secondary);
+  border-radius: 6px;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.custom-checkbox:checked ~ .checkbox-box {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.custom-checkbox:checked ~ .checkbox-box::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 6px;
+  height: 11px;
+  border: solid #FFFFFF;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
+
+.custom-checkbox:focus-visible ~ .checkbox-box {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.consent-text {
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.consent-error {
+  margin-bottom: 4px;
+  margin-top: -4px;
+}
+
+/* 11. Large Submit CTA Button */
+.btn-submit {
+  width: 100%;
+  min-height: var(--tap-target-min);
+  height: 50px;
+  margin-top: 2px;
+  padding: 0 24px;
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.btn-submit:hover {
+  background-color: #0b5475;
+}
+
+.btn-submit:active {
+  transform: scale(0.985);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-submit:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
+.btn-submit.is-submitting {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.btn-submit .btn-spinner {
+  display: none;
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(254, 250, 220, 0.4);
+  border-top-color: var(--color-background);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-left: 10px;
+}
+
+.btn-submit.is-submitting .btn-spinner {
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 12. Post-Submission Confirmation View (Privacy Safe) */
+.confirmation-view {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.confirmation-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 36px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid var(--color-secondary);
+  border-radius: var(--radius-lg);
+  padding: 24px 32px;
+  box-shadow: var(--shadow-md);
+}
+
+.confirmation-info-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.success-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.success-pill svg {
+  width: 18px;
+  height: 18px;
+}
+
+.code-card {
+  width: 100%;
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-md);
+}
+
+.code-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+
+.code-display {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  color: #FEFADC;
+}
+
+.scan-instruction {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--color-primary);
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+
+.btn-next-child {
+  height: 48px;
+  font-size: 16px;
+  background-color: var(--color-secondary);
+  color: #FFFFFF;
+}
+
+.btn-next-child:hover {
+  background-color: #725977;
+}
+
+.confirmation-qr-col {
+  display: flex;
+  justify-content: center;
+}
+
+.qr-card {
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-container {
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-container img, .qr-container canvas {
+  width: 180px !important;
+  height: 180px !important;
+  display: block;
+}
+
+.qr-caption {
+  display: block;
+  margin-top: 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+/* 13. Subtle Kiosk Footer */
+.kiosk-footer {
+  margin-top: auto;
+  padding: 8px 0 4px 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-secondary);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
