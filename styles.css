@@ -44,7 +44,7 @@
 html, body {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
   background-color: var(--color-background);
   color: var(--color-primary);
   font-family: var(--font-body);
@@ -162,16 +162,28 @@ input, textarea {
 .kiosk-container {
   width: 100%;
   max-width: 1200px;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100%;
+  height: 100dvh;
   margin: 0 auto;
   /* Generous left and right padding for safe and balanced margins */
-  padding: env(safe-area-inset-top, 10px) max(32px, env(safe-area-inset-right, 32px)) env(safe-area-inset-bottom, 10px) max(32px, env(safe-area-inset-left, 32px));
+  padding: env(safe-area-inset-top, 8px) max(32px, env(safe-area-inset-right, 32px)) env(safe-area-inset-bottom, 8px) max(32px, env(safe-area-inset-left, 32px));
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  overflow-x: hidden;
+  overflow: hidden;
+}
+
+/* Master Scaler: Scales entire content (header + form) proportionally when vheight is reduced */
+.kiosk-scaler {
+  width: 100%;
+  max-width: 1060px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: top center;
+  transition: transform 0.15s ease-out;
+  will-change: transform;
 }
 
 /* Prevent viewport scrolling when keyboard is active */
@@ -180,20 +192,18 @@ body.keyboard-active {
 }
 
 body.keyboard-active .kiosk-container {
-  min-height: 100dvh;
-  max-height: 100dvh;
   overflow: hidden;
-  padding-top: env(safe-area-inset-top, 6px);
-  padding-bottom: env(safe-area-inset-bottom, 6px);
-  padding-left: max(28px, env(safe-area-inset-left, 28px));
-  padding-right: max(28px, env(safe-area-inset-right, 28px));
+  padding-top: env(safe-area-inset-top, 4px);
+  padding-bottom: env(safe-area-inset-bottom, 4px);
+  padding-left: max(24px, env(safe-area-inset-left, 24px));
+  padding-right: max(24px, env(safe-area-inset-right, 24px));
 }
 
 /* 5. Brand Header */
 .kiosk-header {
   width: 100%;
   text-align: center;
-  padding: 8px 0 10px 0;
+  padding: 4px 0 8px 0;
   flex-shrink: 0;
 }
 
@@ -210,14 +220,6 @@ body.keyboard-active .kiosk-container {
   width: 100%;
   max-width: 1060px;
   padding: 0 12px;
-}
-
-/* Scalable Form Wrapper */
-.form-scale-wrapper {
-  width: 100%;
-  transform-origin: top center;
-  transition: transform 0.15s ease-out;
-  will-change: transform;
 }
 
 /* Form Grid: 2 Columns side-by-side in landscape */
@@ -672,7 +674,7 @@ body.keyboard-active .kiosk-container {
    checkboxes, and submit button cleanly above the on-screen keyboard.
    ========================================================================== */
 
-@media (max-height: 580px) {
+@media (max-height: 650px) {
   .kiosk-container {
     padding-top: env(safe-area-inset-top, 6px);
     padding-bottom: env(safe-area-inset-bottom, 6px);

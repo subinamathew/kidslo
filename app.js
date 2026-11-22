@@ -19,7 +19,7 @@
 
   // DOM Elements - Check-in Form
   const form = document.getElementById('checkinForm');
-  const formScaleWrapper = document.getElementById('formScaleWrapper');
+  const kioskScaler = document.getElementById('kioskScaler');
   const kioskHeader = document.querySelector('.kiosk-header');
   const childNameInput = document.getElementById('childName');
   const parentNameInput = document.getElementById('parentName');
@@ -198,9 +198,9 @@
     confirmationView.classList.remove('hidden');
 
     document.body.classList.remove('keyboard-active');
-    if (formScaleWrapper) {
-      formScaleWrapper.style.transform = '';
-      formScaleWrapper.style.marginBottom = '';
+    if (kioskScaler) {
+      kioskScaler.style.transform = '';
+      kioskScaler.style.marginBottom = '';
     }
 
     // On-Screen Privacy: Display ONLY the generated pickup code
@@ -334,44 +334,44 @@
    * 8. Virtual Keyboard Adaptation & Auto-Scale Fallback
    * Detects visual viewport shrinking above the on-screen keyboard,
    * activates compact layout mode, and applies dynamic transform: scale(...)
-   * with transform-origin: top center if content exceeds available height.
+   * with transform-origin: top center to the entire content container (#kioskScaler)
+   * so all 3 inputs, checkboxes, and the submit CTA fit cleanly without scrolling.
    */
   const updateFormFitAboveKeyboard = () => {
-    if (!form || form.classList.contains('hidden') || !formScaleWrapper) {
+    if (!kioskScaler) {
       return;
     }
 
     const vv = window.visualViewport;
     const viewportHeight = vv ? vv.height : window.innerHeight;
-    const screenHeight = window.screen.availHeight || window.screen.height || window.innerHeight;
-
-    // Detect if virtual keyboard is open or if available viewport height is compressed
-    const isKeyboardActive = (screenHeight > 0 && viewportHeight < screenHeight * 0.8) || viewportHeight < 580;
-    document.body.classList.toggle('keyboard-active', isKeyboardActive);
 
     // Reset scaling and bottom offset to measure natural unscaled height accurately
-    formScaleWrapper.style.transform = '';
-    formScaleWrapper.style.marginBottom = '';
+    kioskScaler.style.transform = '';
+    kioskScaler.style.marginBottom = '';
 
-    // Measure remaining space above keyboard
-    const headerHeight = kioskHeader ? kioskHeader.getBoundingClientRect().height : 0;
-    const verticalGutters = isKeyboardActive ? 16 : 24;
-    const availableHeight = viewportHeight - headerHeight - verticalGutters;
+    // Measure total natural height of the entire content (header + logo + form)
+    const contentHeight = kioskScaler.offsetHeight;
 
-    const naturalFormHeight = formScaleWrapper.offsetHeight;
+    // Safe vertical padding (top and bottom gutters)
+    const verticalGutters = 16;
+    const availableHeight = viewportHeight - verticalGutters;
 
-    // Auto-scale fallback: If form content is taller than available space above keyboard
-    if (availableHeight > 0 && naturalFormHeight > availableHeight) {
-      const scale = Math.min(1, Math.max(0.55, availableHeight / naturalFormHeight));
-      formScaleWrapper.style.transform = `scale(${scale})`;
-      formScaleWrapper.style.transformOrigin = 'top center';
+    // Detect if viewport height is reduced (by on-screen keyboard, small window, or DevTools resize)
+    const isReducedHeight = viewportHeight < 650 || (contentHeight > 0 && availableHeight < contentHeight);
+    document.body.classList.toggle('keyboard-active', isReducedHeight);
+
+    // Auto-scale fallback: If content exceeds available height, scale the ENTIRE content proportionally
+    if (contentHeight > 0 && availableHeight < contentHeight) {
+      const scale = Math.min(1, Math.max(0.40, availableHeight / contentHeight));
+      kioskScaler.style.transform = `scale(${scale.toFixed(3)})`;
+      kioskScaler.style.transformOrigin = 'top center';
 
       // Counteract the layout box height overflow to eliminate unwanted scrolling
-      const heightDifference = naturalFormHeight * (1 - scale);
-      formScaleWrapper.style.marginBottom = `-${heightDifference}px`;
+      const heightDifference = contentHeight * (1 - scale);
+      kioskScaler.style.marginBottom = `-${heightDifference}px`;
     } else {
-      formScaleWrapper.style.transform = '';
-      formScaleWrapper.style.marginBottom = '';
+      kioskScaler.style.transform = '';
+      kioskScaler.style.marginBottom = '';
     }
   };
 
