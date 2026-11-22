@@ -19,6 +19,8 @@
 
   // DOM Elements - Check-in Form
   const form = document.getElementById('checkinForm');
+  const formScaleWrapper = document.getElementById('formScaleWrapper');
+  const kioskHeader = document.querySelector('.kiosk-header');
   const childNameInput = document.getElementById('childName');
   const parentNameInput = document.getElementById('parentName');
   const parentPhoneInput = document.getElementById('parentPhone');
@@ -183,6 +185,7 @@
       consentError.textContent = '';
     }
 
+    queueFormFitUpdate();
     return isValid;
   };
 
@@ -193,6 +196,12 @@
     // Hide form, reveal confirmation view
     form.classList.add('hidden');
     confirmationView.classList.remove('hidden');
+
+    document.body.classList.remove('keyboard-active');
+    if (formScaleWrapper) {
+      formScaleWrapper.style.transform = '';
+      formScaleWrapper.style.marginBottom = '';
+    }
 
     // On-Screen Privacy: Display ONLY the generated pickup code
     displayPickupCode.textContent = code;
@@ -246,7 +255,8 @@
     submitBtn.classList.remove('is-submitting');
     submitBtn.disabled = false;
 
-    // Focus first input field for the next parent
+    // Recalculate layout fit and focus first field
+    queueFormFitUpdate();
     childNameInput.focus();
   };
 
@@ -319,5 +329,95 @@
       }
     }
   });
+
+  /**
+   * 8. Virtual Keyboard Adaptation & Auto-Scale Fallback
+   * Detects visual viewport shrinking above the on-screen keyboard,
+   * activates compact layout mode, and applies dynamic transform: scale(...)
+   * with transform-origin: top center if content exceeds available height.
+   */
+  const updateFormFitAboveKeyboard = () => {
+    if (!form || form.classList.contains('hidden') || !formScaleWrapper) {
+      return;
+    }
+
+    const vv = window.visualViewport;
+    const viewportHeight = vv ? vv.height : window.innerHeight;
+    const screenHeight = window.screen.availHeight || window.screen.height || window.innerHeight;
+
+    // Detect if virtual keyboard is open or if available viewport height is compressed
+    const isKeyboardActive = (screenHeight > 0 && viewportHeight < screenHeight * 0.8) || viewportHeight < 580;
+    document.body.classList.toggle('keyboard-active', isKeyboardActive);
+
+    // Reset scaling and bottom offset to measure natural unscaled height accurately
+    formScaleWrapper.style.transform = '';
+    formScaleWrapper.style.marginBottom = '';
+
+    // Measure remaining space above keyboard
+    const headerHeight = kioskHeader ? kioskHeader.getBoundingClientRect().height : 0;
+    const verticalGutters = isKeyboardActive ? 16 : 24;
+    const availableHeight = viewportHeight - headerHeight - verticalGutters;
+
+    const naturalFormHeight = formScaleWrapper.offsetHeight;
+
+    // Auto-scale fallback: If form content is taller than available space above keyboard
+    if (availableHeight > 0 && naturalFormHeight > availableHeight) {
+      const scale = Math.min(1, Math.max(0.55, availableHeight / naturalFormHeight));
+      formScaleWrapper.style.transform = `scale(${scale})`;
+      formScaleWrapper.style.transformOrigin = 'top center';
+
+      // Counteract the layout box height overflow to eliminate unwanted scrolling
+      const heightDifference = naturalFormHeight * (1 - scale);
+      formScaleWrapper.style.marginBottom = `-${heightDifference}px`;
+    } else {
+      formScaleWrapper.style.transform = '';
+      formScaleWrapper.style.marginBottom = '';
+    }
+  };
+
+  let resizeRaf = null;
+  const queueFormFitUpdate = () => {
+    if (resizeRaf) cancelAnimationFrame(resizeRaf);
+    resizeRaf = requestAnimationFrame(() => {
+      updateFormFitAboveKeyboard();
+    });
+  };
+
+  // Listen to visualViewport API (Chrome, Safari iOS, Edge, Android)
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', queueFormFitUpdate);
+    window.visualViewport.addEventListener('scroll', () => {
+      // Prevent unwanted iOS Safari scroll offsets when focusing fields in landscape
+      if (document.body.classList.contains('keyboard-active') && window.scrollY > 0) {
+        window.scrollTo(0, 0);
+      }
+      queueFormFitUpdate();
+    });
+  }
+
+  window.addEventListener('resize', queueFormFitUpdate);
+  window.addEventListener('orientationchange', () => {
+    setTimeout(queueFormFitUpdate, 150);
+  });
+
+  // Track field focus and blur events with iOS virtual keyboard animation timing
+  [childNameInput, parentNameInput, parentPhoneInput].forEach(input => {
+    if (!input) return;
+    input.addEventListener('focus', () => {
+      setTimeout(queueFormFitUpdate, 80);
+      setTimeout(queueFormFitUpdate, 320);
+    });
+    input.addEventListener('blur', () => {
+      setTimeout(queueFormFitUpdate, 100);
+      setTimeout(queueFormFitUpdate, 300);
+    });
+  });
+
+  // Run on initial load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', queueFormFitUpdate);
+  } else {
+    queueFormFitUpdate();
+  }
 
 })();
