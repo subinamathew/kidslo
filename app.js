@@ -20,7 +20,6 @@
   // DOM Elements - Check-in Form
   const form = document.getElementById('checkinForm');
   const kioskScaler = document.getElementById('kioskScaler');
-  const kioskHeader = document.querySelector('.kiosk-header');
   const childNameInput = document.getElementById('childName');
   const parentNameInput = document.getElementById('parentName');
   const parentPhoneInput = document.getElementById('parentPhone');
