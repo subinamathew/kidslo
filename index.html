@@ -44,10 +44,25 @@
   <div class="kiosk-container">
     <!-- Scalable Master Content Wrapper for Virtual Keyboard & Viewport Fitting -->
     <div class="kiosk-scaler" id="kioskScaler">
-      <!-- Top Header with Prominent Logo -->
+      <!-- Top Header with Prominent Bold Logo & Campus Schedule Info -->
       <header class="kiosk-header">
-        <img src="./logo.png" alt="Echo Kids Logo" class="brand-logo" width="180" height="65">
+        <img src="./logo.png" alt="Echo Kids Logo" class="brand-logo brand-logo-bold" width="180" height="65">
         <h1 class="visually-hidden">Echo Kids Check-In</h1>
+
+        <!-- Campus Locations & Service Times Info (in German) -->
+        <div class="campus-schedule-card">
+          <div class="schedule-location">
+            <span class="location-badge">Gifhorn</span>
+            <span class="location-address">(Schützenplatz 1):</span>
+            <span class="location-times">Jeden Sonntag um <strong>10:00 & 12:00 Uhr</strong> <span class="checkin-tag">Check-In ab <strong>9:30 & 11:30 Uhr</strong></span></span>
+          </div>
+          <div class="schedule-divider" aria-hidden="true"></div>
+          <div class="schedule-location">
+            <span class="location-badge">Wolfsburg</span>
+            <span class="location-address">(Leonardo Hotel City Center):</span>
+            <span class="location-times">Jeden Sonntag um <strong>10:00 Uhr</strong> <span class="checkin-tag">Check-In ab <strong>9:30 Uhr</strong></span></span>
+          </div>
+        </div>
       </header>
 
     <!-- Main Content Area -->

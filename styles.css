@@ -203,8 +203,11 @@ body.keyboard-active .kiosk-container {
 /* 5. Brand Header */
 .kiosk-header {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: 4px 0 8px 0;
+  padding: 4px 0 10px 0;
   flex-shrink: 0;
 }
 
@@ -214,6 +217,70 @@ body.keyboard-active .kiosk-container {
   width: auto;
   object-fit: contain;
   transition: max-height 0.2s ease;
+}
+
+/* Enhanced Bold Logo Styling */
+.brand-logo-bold {
+  filter: drop-shadow(0.5px 0 0 var(--color-primary)) drop-shadow(-0.5px 0 0 var(--color-primary));
+}
+
+/* Campus Locations & Schedule Banner */
+.campus-schedule-card {
+  margin-top: 6px;
+  margin-bottom: 2px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 4px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  box-shadow: var(--shadow-sm);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--color-primary);
+  line-height: 1.35;
+}
+
+.schedule-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.location-badge {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--color-primary);
+}
+
+.location-address {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.location-times {
+  color: var(--color-primary);
+}
+
+.checkin-tag {
+  background: var(--color-surface-tint);
+  color: var(--color-primary);
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: var(--radius-sm);
+  font-size: 11.5px;
+  margin-left: 2px;
+  border: 1px solid rgba(132, 107, 138, 0.25);
+}
+
+.schedule-divider {
+  width: 1px;
+  height: 18px;
+  background-color: var(--color-border);
 }
 
 /* 6. Main Kiosk Area */
@@ -680,6 +747,27 @@ body.keyboard-active .kiosk-container {
     max-height: 32px;
   }
 
+  .campus-schedule-card {
+    margin-top: 3px;
+    margin-bottom: 2px;
+    padding: 2px 12px;
+    font-size: 11px;
+    gap: 10px;
+  }
+
+  .location-badge {
+    font-size: 11.5px;
+  }
+
+  .checkin-tag {
+    font-size: 10.5px;
+    padding: 1px 5px;
+  }
+
+  .schedule-divider {
+    height: 14px;
+  }
+
   .form-grid {
     grid-template-columns: 1fr 1.15fr !important; /* Strict 2-column horizontal layout */
     gap: 16px;
@@ -801,6 +889,27 @@ body.keyboard-active .brand-logo {
   max-height: 32px;
 }
 
+body.keyboard-active .campus-schedule-card {
+  margin-top: 3px;
+  margin-bottom: 2px;
+  padding: 2px 12px;
+  font-size: 11px;
+  gap: 10px;
+}
+
+body.keyboard-active .location-badge {
+  font-size: 11.5px;
+}
+
+body.keyboard-active .checkin-tag {
+  font-size: 10.5px;
+  padding: 1px 5px;
+}
+
+body.keyboard-active .schedule-divider {
+  height: 14px;
+}
+
 body.keyboard-active .form-grid {
   grid-template-columns: 1fr 1.15fr !important; /* Strict 2-column horizontal layout */
   gap: 16px;
@@ -915,7 +1024,19 @@ body.keyboard-active .btn-submit {
 /* Extra compact spacing for ultra-short viewports (< 430px) */
 @media (max-height: 430px) {
   .brand-logo {
-    max-height: 26px;
+    max-height: 24px;
+  }
+  .campus-schedule-card {
+    padding: 2px 8px;
+    font-size: 10px;
+    gap: 6px;
+  }
+  .location-badge {
+    font-size: 10.5px;
+  }
+  .checkin-tag {
+    font-size: 9.5px;
+    padding: 0 4px;
   }
   .form-grid {
     gap: 12px;
