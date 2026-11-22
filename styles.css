@@ -166,15 +166,15 @@ input, textarea {
   height: 100dvh;
   margin: 0 auto;
   /* Generous left and right padding for safe and balanced margins */
-  padding: env(safe-area-inset-top, 16px) max(32px, env(safe-area-inset-right, 32px)) env(safe-area-inset-bottom, 16px) max(32px, env(safe-area-inset-left, 32px));
+  padding: env(safe-area-inset-top, 8px) max(32px, env(safe-area-inset-right, 32px)) env(safe-area-inset-bottom, 8px) max(32px, env(safe-area-inset-left, 32px));
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
 }
 
-/* Master Scaler: Scales entire content proportionally when vheight is reduced */
+/* Master Scaler: Scales entire content (header + form) proportionally when vheight is reduced */
 .kiosk-scaler {
   width: 100%;
   max-width: 1060px;
@@ -194,13 +194,29 @@ body.keyboard-active {
 body.keyboard-active .kiosk-container {
   overflow: hidden;
   justify-content: flex-start;
-  padding-top: env(safe-area-inset-top, 6px);
-  padding-bottom: env(safe-area-inset-bottom, 6px);
+  padding-top: env(safe-area-inset-top, 4px);
+  padding-bottom: env(safe-area-inset-bottom, 4px);
   padding-left: max(24px, env(safe-area-inset-left, 24px));
   padding-right: max(24px, env(safe-area-inset-right, 24px));
 }
 
-/* 5. Main Kiosk Area */
+/* 5. Brand Header */
+.kiosk-header {
+  width: 100%;
+  text-align: center;
+  padding: 4px 0 8px 0;
+  flex-shrink: 0;
+}
+
+.brand-logo {
+  display: inline-block;
+  max-height: 48px;
+  width: auto;
+  object-fit: contain;
+  transition: max-height 0.2s ease;
+}
+
+/* 6. Main Kiosk Area */
 .kiosk-main {
   width: 100%;
   max-width: 1060px;
@@ -656,6 +672,14 @@ body.keyboard-active .kiosk-container {
     overflow: hidden;
   }
 
+  .kiosk-header {
+    padding: 2px 0 4px 0;
+  }
+
+  .brand-logo {
+    max-height: 32px;
+  }
+
   .form-grid {
     grid-template-columns: 1fr 1.15fr !important; /* Strict 2-column horizontal layout */
     gap: 16px;
@@ -769,6 +793,14 @@ body.keyboard-active .kiosk-container {
 }
 
 /* JavaScript-triggered keyboard-active state (synchronous with visualViewport) */
+body.keyboard-active .kiosk-header {
+  padding: 2px 0 4px 0;
+}
+
+body.keyboard-active .brand-logo {
+  max-height: 32px;
+}
+
 body.keyboard-active .form-grid {
   grid-template-columns: 1fr 1.15fr !important; /* Strict 2-column horizontal layout */
   gap: 16px;
@@ -882,6 +914,9 @@ body.keyboard-active .btn-submit {
 
 /* Extra compact spacing for ultra-short viewports (< 430px) */
 @media (max-height: 430px) {
+  .brand-logo {
+    max-height: 26px;
+  }
   .form-grid {
     gap: 12px;
   }
